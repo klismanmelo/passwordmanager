@@ -26,7 +26,7 @@ def dashboard():
 
     if maiusculas or minusculas or numeros or especiais:
         if st.button('Gerar senha'):
-            senha = gerar_senha(tamanho)
+            senha = gerar_senha(tamanho, maiusculas, minusculas, numeros, especiais)
             st.session_state.generated_password = senha
             st.rerun()
             colum1, colum2 = st.columns([8, 2])
