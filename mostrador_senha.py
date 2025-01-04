@@ -18,7 +18,7 @@ def render_list_item(icon, description, text, index):
     with col4:
         copy_col, toggle_col = st.columns([1, 1])
         with copy_col:
-            if st.button("📋", key=f"copy_{index}"):
+            if st.button("🔍", key=f"copy_{index}"):
                 pp.copy(text)
         with toggle_col:
             if st.button("👁️", key=f"toggle_{index}"):

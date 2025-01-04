@@ -2,11 +2,18 @@ import streamlit as st
 from generatepassword import gerar_senha
 from mostrador_senha import *
 
+TIPOS_DE_EMOJIS = [
+    '🔑', '🔐', '🗝️', '🔒', '👁️‍🗨️', '👀'
+]
+
 if "list" not in st.session_state:
     st.session_state.list = []
 
-def save_password(senha):
-    new_item = {"icon": "🔒", "description": "Password", "text": f"{senha}"}
+if "generated_password" not in st.session_state:
+    st.session_state.generated_password = None
+
+def save_password(senha, emoji, descricao):
+    new_item = {"icon": f"{emoji}", "description": f"{descricao}", "text": f"{senha}"}
     st.session_state.list.append(new_item)
 
 def dashboard():
@@ -29,20 +36,25 @@ def dashboard():
             senha = gerar_senha(tamanho, maiusculas, minusculas, numeros, especiais)
             st.session_state.generated_password = senha
             st.rerun()
-            colum1, colum2 = st.columns([8, 2])
-            with colum1:
-                st.success(f'Senha gerada: {senha}')
-            with colum2:
-                if st.button('Salvar senha', key=senha):
-                    save_password(senha)
-        if "generated_password" in st.session_state:
+
+        if st.session_state.generated_password:
             senha = st.session_state.generated_password
-            col1, col2 = st.columns([8, 2])
-            with col1:
-                st.success(f"Senha gerada: {senha}")
-            with col2:
-                if st.button("Salvar senha", key=f"save_{senha}"):
-                    save_password(senha)
+            st.success(f"Senha gerada: {senha}")
+
+            with st.expander("Salvar senha"):
+                col1, col2 = st.columns([1, 4])
+                with col1:
+                    emoji = st.selectbox("Emoji", TIPOS_DE_EMOJIS)
+                with col2:
+                    descricao = st.text_input("Descrição")
+
+                if st.button("Salvar", key=f"save_{senha}"):
+                    if descricao.strip():
+                        save_password(senha, emoji, descricao)
+                        st.session_state.generated_password = None
+                        st.success("Senha salva com sucesso!")
+                    else:
+                        st.error("A descrição não pode estar vazia!")
 
 def main():
     dashboard()
