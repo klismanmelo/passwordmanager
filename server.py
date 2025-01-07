@@ -6,7 +6,6 @@ def connect():
 
     response = requests.get(API_URL)
     if response.status_code == 200:
-        print("Connected")
         return response
     else:
         print("Failed to connect")

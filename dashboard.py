@@ -1,5 +1,7 @@
 import streamlit as st
 import server
+import requests
+
 from generatepassword import gerar_senha
 from mostrador_senha import *
 
@@ -15,8 +17,25 @@ if "generated_password" not in st.session_state:
     st.session_state.generated_password = None
 
 def save_password(senha, emoji, descricao):
-    new_item = {"icon": f"{emoji}", "description": f"{descricao}", "text": f"{senha}"}
-    st.session_state.list.append(new_item)
+    API_URL = "http://127.0.0.1:8000/password/"
+
+    payload = {
+        "emoji": emoji,
+        "description": descricao,
+        "password": senha
+    }
+
+    try:
+        response = requests.post(API_URL, json=payload)
+
+        if response.status_code == 200 or response.status_code == 201 :
+            data = response.json()
+            st.success(f"Senha gerada com sucesso!")
+        else:
+            st.error(f"Erro na API: {response.status_code} - {response.text}")
+    except Exception as e:
+        st.error(f"Erro ao conectar à API: {e}")
+
 
 def dashboard():
     st.header('Dashboard')
@@ -54,7 +73,6 @@ def dashboard():
                     if descricao.strip():
                         save_password(senha, emoji, descricao)
                         st.session_state.generated_password = None
-                        st.success("Senha salva com sucesso!")
                     else:
                         st.error("A descrição não pode estar vazia!")
 
