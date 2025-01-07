@@ -1,6 +1,8 @@
 import streamlit as st
+import server
 from generatepassword import gerar_senha
 from mostrador_senha import *
+
 
 TIPOS_DE_EMOJIS = [
     '🔑', '🔐', '🗝️', '🔒', '👁️‍🗨️', '👀'
@@ -57,11 +59,15 @@ def dashboard():
                         st.error("A descrição não pode estar vazia!")
 
 def main():
-    dashboard()
-    st.subheader('Itens Salvos')
+    status_server = server.connect()
+    if status_server:
+        dashboard()
+        st.subheader('Itens Salvos')
 
-    for idx, item in enumerate(st.session_state.list):
-        render_list_item(item["icon"], item["description"], item["text"], idx)
+        for idx, item in enumerate(st.session_state.list):
+            render_list_item(item["icon"], item["description"], item["text"], idx)
+    else:
+        st.subheader('Server Error')
 
 if __name__ == '__main__':
     main()
