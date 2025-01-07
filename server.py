@@ -24,3 +24,15 @@ def list_passwords():
             return None
     except:
         print("Failed to connect")
+
+def delete_password(id_password):
+    API_URL = "http://127.0.0.1:8000/password/"
+    try:
+        # Fazendo a requisição DELETE com o ID
+        response = requests.delete(f"{API_URL}{id_password}/")
+        if response.status_code == 204:
+            print("Successfully deleted")
+        else:
+            print("Failed to delete")
+    except Exception as e:
+        st.error(f"Erro ao conectar à API: {e}")

@@ -7,7 +7,7 @@ from mostrador_senha import *
 
 
 TIPOS_DE_EMOJIS = [
-    '🔑', '🔐', '🗝️', '🔒', '👁️‍🗨️', '👀'
+    '🔑', '🔐', '🗝️', '🔒', '👀'
 ]
 
 if "list" not in st.session_state:
@@ -84,11 +84,6 @@ def main():
 
         passwords_list = server.list_passwords()
 
-        emoji = list['emoji']
-        descricao = list['description']
-        password = list['password']
-        id = list['id_password']
-
         if isinstance(passwords_list, list):  # Garantir que o retorno seja uma lista
             for idx, item in enumerate(passwords_list):
                 emoji = item.get('emoji', '🔒')  # Fallback se 'emoji' não existir
@@ -98,9 +93,6 @@ def main():
 
                 # Renderiza cada item da lista
                 render_list_item(emoji, description, password, id_password)
-
-        #for idx, item in enumerate(st.session_state.list):
-        #    render_list_item(item["icon"], item["description"], item["text"], idx)
     else:
         st.subheader('Server Error')
 

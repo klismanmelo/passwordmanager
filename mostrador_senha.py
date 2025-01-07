@@ -1,9 +1,10 @@
 import streamlit as st
 import pyperclip as pp
+from server import delete_password
 
 
 def render_list_item(icon, description, text, index):
-    col1, col2, col3, col4 = st.columns([1, 2, 4, 2])  # Layout com colunas
+    col1, col2, col3, col4 = st.columns([1, 2, 4, 3])  # Layout com colunas
     with col1:
         st.markdown(f"<span style='font-size: 20px;'>{icon}</span>", unsafe_allow_html=True)
     with col2:
@@ -16,11 +17,15 @@ def render_list_item(icon, description, text, index):
         else:
             st.write(masked_text)
     with col4:
-        copy_col, toggle_col = st.columns([1, 1])
+        copy_col, toggle_col, delete_col = st.columns([1, 1, 1])
         with copy_col:
             if st.button("🔍", key=f"copy_{index}"):
                 pp.copy(text)
         with toggle_col:
             if st.button("👁️", key=f"toggle_{index}"):
                 st.session_state[f"show_{index}"] = not st.session_state.get(f"show_{index}", False)
+        with delete_col:
+            if st.button("❌", key=f"delete_{index}"):
+                delete_password(index)
+                st.rerun()
 
